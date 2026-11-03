@@ -83,9 +83,20 @@ function getCardElement(
   const cardElement = cardTemplate.cloneNode(true);
   const cardTitle = cardElement.querySelector(".card__title");
   const cardImage = cardElement.querySelector(".card__image");
+  const cardLikeBtn = cardElement.querySelector(".card__like-button");
+  const cardDeleteBtn = cardElement.querySelector(".card__delete-button");
 
   cardTitle.textContent = name;
   cardImage.src = link;
+
+  cardLikeBtn.addEventListener("click", () => {
+    cardLikeBtn.classList.toggle("card__like-button_is-active");
+  });
+
+  cardDeleteBtn.addEventListener("click", () => {
+    console.log("delete button clicked");
+    cardElement.remove();
+  });
 
   return cardElement;
 }
@@ -93,6 +104,7 @@ function renderCard(name, link, container) {
   const cardElement = getCardElement(name, link);
   container.prepend(cardElement);
 }
+
 initialCards.forEach((item) => {
   renderCard(item.name, item.link, cardContainer);
 });
