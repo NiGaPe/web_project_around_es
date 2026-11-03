@@ -80,6 +80,7 @@ const cardTemplate = document
 const cardPopup = document.querySelector("#image-popup");
 const cardPopupImage = cardPopup.querySelector(".popup__image");
 const cardPopupCloseBtn = cardPopup.querySelector(".popup__close");
+const cardPopupCaption = cardPopup.querySelector(".popup__caption");
 
 function getCardElement(
   name = "Sin título",
@@ -106,7 +107,9 @@ function getCardElement(
 
   cardImage.addEventListener("click", () => {
     cardPopupImage.src = link;
-    console.log("card imageclicked");
+    cardPopupImage.alt = name;
+    cardPopupCaption.textContent = name;
+    console.log("card image clicked");
     cardPopup.classList.add("popup_is-opened");
   });
 
@@ -130,10 +133,10 @@ addCardBtn.addEventListener("click", () => openModal(newCardPopup));
 newCardCloseBtn.addEventListener("click", () => closeModal(newCardPopup));
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
-  let newCardName = newCardForm.querySelector(
+  const newCardName = newCardForm.querySelector(
     ".popup__input_type_card-name",
   ).value;
-  let newCardLink = newCardForm.querySelector(".popup__input_type_url").value;
+  const newCardLink = newCardForm.querySelector(".popup__input_type_url").value;
   renderCard(newCardName, newCardLink, cardContainer);
   closeModal(newCardPopup);
 }
