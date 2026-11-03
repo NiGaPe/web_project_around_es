@@ -21,7 +21,7 @@ const initialCards = [
   },
   {
     name: "Lago di Braies",
-    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg,",
+    link: "https://practicum-content.s3.us-west-1.amazonaws.com/web-code/moved_lago.jpg",
   },
 ];
 
@@ -76,6 +76,11 @@ const cardContainer = document.querySelector(".cards__list");
 const cardTemplate = document
   .querySelector("#card-template")
   .content.querySelector(".card");
+
+const cardPopup = document.querySelector("#image-popup");
+const cardPopupImage = cardPopup.querySelector(".popup__image");
+const cardPopupCloseBtn = cardPopup.querySelector(".popup__close");
+
 function getCardElement(
   name = "Sin título",
   link = "./images/placeholder.jpg",
@@ -90,12 +95,19 @@ function getCardElement(
   cardImage.src = link;
 
   cardLikeBtn.addEventListener("click", () => {
+    console.log("card like button clicked");
     cardLikeBtn.classList.toggle("card__like-button_is-active");
   });
 
   cardDeleteBtn.addEventListener("click", () => {
-    console.log("delete button clicked");
+    console.log("card delete button clicked");
     cardElement.remove();
+  });
+
+  cardImage.addEventListener("click", () => {
+    cardPopupImage.src = link;
+    console.log("card imageclicked");
+    cardPopup.classList.add("popup_is-opened");
   });
 
   return cardElement;
@@ -126,3 +138,8 @@ function handleCardFormSubmit(evt) {
   closeModal(newCardPopup);
 }
 newCardForm.addEventListener("submit", handleCardFormSubmit);
+
+cardPopupCloseBtn.addEventListener("click", () => {
+  cardPopup.classList.remove("popup_is-opened");
+  console.log("card popup close button clicked");
+});
