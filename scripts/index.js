@@ -35,6 +35,12 @@ const editProfileForm = document.querySelector("#edit-profile-form");
 const editProfileBtn = document.querySelector(".profile__edit-button");
 const editProfilePopup = document.querySelector("#edit-popup");
 const editProfileCloseBtn = editProfilePopup.querySelector(".popup__close");
+const profileNameInput = editProfilePopup.querySelector(
+  ".popup__input_type_name",
+);
+const profileDescriptionInput = editProfilePopup.querySelector(
+  ".popup__input_type_description",
+);
 
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
@@ -43,10 +49,8 @@ function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
 }
 function fillProfileForm() {
-  editProfilePopup.querySelector(".popup__input_type_name").value =
-    profileTitle.textContent;
-  editProfilePopup.querySelector(".popup__input_type_description").value =
-    profileDescription.textContent;
+  profileNameInput.value = profileTitle.textContent;
+  profileDescriptionInput.value = profileDescription.textContent;
 }
 function handleOpenEditModal(modal) {
   fillProfileForm();
@@ -54,12 +58,8 @@ function handleOpenEditModal(modal) {
 }
 function handleEditProfileFormSubmit(evt) {
   evt.preventDefault();
-  let newName = editProfilePopup.querySelector(".popup__input_type_name").value;
-  let newDescription = editProfilePopup.querySelector(
-    ".popup__input_type_description",
-  ).value;
-  profileTitle.textContent = newName;
-  profileDescription.textContent = newDescription;
+  profileTitle.textContent = profileNameInput.value;
+  profileDescription.textContent = profileDescriptionInput.value;
   closeModal(editProfilePopup);
 }
 
@@ -110,7 +110,7 @@ function getCardElement(
     cardPopupImage.alt = name;
     cardPopupCaption.textContent = name;
     console.log("card image clicked");
-    cardPopup.classList.add("popup_is-opened");
+    openModal(cardPopup);
   });
 
   return cardElement;
@@ -131,18 +131,18 @@ const newCardForm = document.querySelector("#new-card-form");
 
 addCardBtn.addEventListener("click", () => openModal(newCardPopup));
 newCardCloseBtn.addEventListener("click", () => closeModal(newCardPopup));
+
+const cardNameInput = newCardForm.querySelector(".popup__input_type_card-name");
+const cardLinkInput = newCardForm.querySelector(".popup__input_type_url");
+
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
-  const newCardName = newCardForm.querySelector(
-    ".popup__input_type_card-name",
-  ).value;
-  const newCardLink = newCardForm.querySelector(".popup__input_type_url").value;
-  renderCard(newCardName, newCardLink, cardContainer);
+  renderCard(cardNameInput.value, cardLinkInput.value, cardContainer);
   closeModal(newCardPopup);
 }
 newCardForm.addEventListener("submit", handleCardFormSubmit);
 
 cardPopupCloseBtn.addEventListener("click", () => {
-  cardPopup.classList.remove("popup_is-opened");
+  closeModal(cardPopup);
   console.log("card popup close button clicked");
 });
