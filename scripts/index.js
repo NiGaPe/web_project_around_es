@@ -133,7 +133,10 @@ const newCardPopup = document.querySelector("#new-card-popup");
 const newCardCloseBtn = newCardPopup.querySelector(".popup__close");
 const newCardForm = document.querySelector("#new-card-form");
 
-addCardBtn.addEventListener("click", () => openModal(newCardPopup));
+addCardBtn.addEventListener("click", () => {
+  resetNewCardForm();
+  openModal(newCardPopup);
+});
 newCardCloseBtn.addEventListener("click", () => closeModal(newCardPopup));
 
 const cardNameInput = newCardForm.querySelector(".popup__input_type_card-name");
@@ -152,14 +155,14 @@ cardPopupCloseBtn.addEventListener("click", () => {
 });
 
 function showInputError(element, errorMessage) {
-  const errorElement = editProfileForm.querySelector(`#${element.id}-error`);
+  const errorElement = element.form.querySelector(`#${element.id}-error`);
   element.classList.add("popup__input_type_error");
   errorElement.textContent = errorMessage;
   errorElement.classList.add("popup__error_visible");
 }
 
 function hideInputError(element) {
-  const errorElement = editProfileForm.querySelector(`#${element.id}-error`);
+  const errorElement = element.form.querySelector(`#${element.id}-error`);
   element.classList.remove("popup__input_type_error");
   errorElement.textContent = "";
   errorElement.classList.remove("popup__error_visible");
@@ -195,6 +198,36 @@ editProfileForm.addEventListener("submit", (event) => {
   let formValid = true;
 
   profileInputs.forEach((input) => {
+    if (!input.validity.valid) {
+      showInputError(input, input.validationMessage);
+      formValid = false;
+    }
+  });
+
+  if (!formValid) {
+    event.preventDefault();
+  }
+});
+
+const cardInputs = newCardForm.querySelectorAll(".popup__input");
+const newCardSubmitBtn = newCardForm.querySelector(".popup__button");
+
+function resetNewCardForm() {
+  newCardForm.reset();
+  cardInputs.forEach(hideInputError);
+  toggleButtonState(cardInputs, newCardSubmitBtn);
+}
+
+cardInputs.forEach((input) => {
+  input.addEventListener("input", () =>
+    inputValidation(cardInputs, newCardSubmitBtn, input),
+  );
+});
+
+newCardForm.addEventListener("submit", (event) => {
+  let formValid = true;
+
+  cardInputs.forEach((input) => {
     if (!input.validity.valid) {
       showInputError(input, input.validationMessage);
       formValid = false;
