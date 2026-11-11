@@ -51,6 +51,10 @@ function closeModal(modal) {
 function fillProfileForm() {
   profileNameInput.value = profileTitle.textContent;
   profileDescriptionInput.value = profileDescription.textContent;
+
+  profileInputs.forEach((input) =>
+    inputValidation(profileInputs, editProfileSubmitBtn, input),
+  );
 }
 function handleOpenEditModal(modal) {
   fillProfileForm();
@@ -145,4 +149,59 @@ newCardForm.addEventListener("submit", handleCardFormSubmit);
 cardPopupCloseBtn.addEventListener("click", () => {
   closeModal(cardPopup);
   console.log("card popup close button clicked");
+});
+
+function showInputError(element, errorMessage) {
+  const errorElement = editProfileForm.querySelector(`#${element.id}-error`);
+  element.classList.add("popup__input_type_error");
+  errorElement.textContent = errorMessage;
+  errorElement.classList.add("popup__error_visible");
+}
+
+function hideInputError(element) {
+  const errorElement = editProfileForm.querySelector(`#${element.id}-error`);
+  element.classList.remove("popup__input_type_error");
+  errorElement.textContent = "";
+  errorElement.classList.remove("popup__error_visible");
+}
+
+function toggleButtonState(formInputs, submitBtn) {
+  const allValid = Array.from(formInputs).every(
+    (input) => input.validity.valid,
+  );
+  submitBtn.disabled = !allValid;
+  submitBtn.classList.toggle("popup__button_disabled", !allValid);
+}
+
+const profileInputs = editProfileForm.querySelectorAll(".popup__input");
+const editProfileSubmitBtn = editProfileForm.querySelector(".popup__button");
+
+function inputValidation(formInputs, submitBtn, input) {
+  if (!input.validity.valid) {
+    showInputError(input, input.validationMessage);
+  } else {
+    hideInputError(input);
+  }
+  toggleButtonState(formInputs, submitBtn);
+}
+
+profileInputs.forEach((input) => {
+  input.addEventListener("input", () =>
+    inputValidation(profileInputs, editProfileSubmitBtn, input),
+  );
+});
+
+editProfileForm.addEventListener("submit", (event) => {
+  let formValid = true;
+
+  profileInputs.forEach((input) => {
+    if (!input.validity.valid) {
+      showInputError(input, input.validationMessage);
+      formValid = false;
+    }
+  });
+
+  if (!formValid) {
+    event.preventDefault();
+  }
 });
