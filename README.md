@@ -6,7 +6,7 @@ Página web que muestra el perfil de un usuario y una galería de lugares.
 
 ## Funcionalidad
 
-- Editar perfil, agregar y eliminar tarjetas, dar "me gusta" y ampliar imágenes.
+- Editar perfil, agregar y eliminar tarjetas, dar "me gusta", ampliar imágenes, cerrar modales con tecla esc o click fuera de estos.
 
 ## Tecnologías
 
