@@ -44,9 +44,11 @@ const profileDescriptionInput = editProfilePopup.querySelector(
 
 function openModal(modal) {
   modal.classList.add("popup_is-opened");
+  document.addEventListener("click", closeOnOutsideClick);
 }
 function closeModal(modal) {
   modal.classList.remove("popup_is-opened");
+  document.removeEventListener("click", closeOnOutsideClick);
 }
 function fillProfileForm() {
   profileNameInput.value = profileTitle.textContent;
@@ -238,3 +240,13 @@ newCardForm.addEventListener("submit", (event) => {
     event.preventDefault();
   }
 });
+
+function closeOnOutsideClick(event) {
+  if (!event.target.classList.contains("popup")) return;
+
+  const openedPopup = document.querySelector(".popup_is-opened");
+  if (openedPopup) {
+    closeModal(openedPopup);
+    console.log("Clicked outside the popup, closing popup");
+  }
+}
