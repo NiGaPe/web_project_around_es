@@ -37,6 +37,21 @@ export class FormValidator {
     });
   }
 
+  resetValidation() {
+    const inputs = this._formElement.querySelectorAll(
+      this._config.inputSelector,
+    );
+    const submitBtn = this._formElement.querySelector(
+      this._config.submitButtonSelector,
+    );
+
+    inputs.forEach((input) => {
+      this._hideInputError(input);
+    });
+
+    this._toggleButtonState(inputs, submitBtn);
+  }
+
   _inputValidation(formInputs, submitBtn, input) {
     if (!input.validity.valid) {
       this._showInputError(input, input.validationMessage);

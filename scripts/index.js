@@ -1,7 +1,6 @@
 import { Card } from "./Card.js";
 import { FormValidator } from "./FormValidator.js";
-import { openModal } from "./utils.js";
-import { closeModal } from "./utils.js";
+import { closeModal, openModal } from "./utils.js";
 
 const validationConfig = {
   inputSelector: ".popup__input",
@@ -53,6 +52,10 @@ function renderCard(card, container) {
 const profileTitle = document.querySelector(".profile__title");
 const profileDescription = document.querySelector(".profile__description");
 const editProfileForm = document.querySelector("#edit-profile-form");
+
+const profileValidator = new FormValidator(validationConfig, editProfileForm);
+profileValidator.setEventListeners();
+
 const editProfileBtn = document.querySelector(".profile__edit-button");
 const editProfilePopup = document.querySelector("#edit-popup");
 const editProfileCloseBtn = editProfilePopup.querySelector(".popup__close");
@@ -67,9 +70,7 @@ function fillProfileForm() {
   profileNameInput.value = profileTitle.textContent;
   profileDescriptionInput.value = profileDescription.textContent;
 
-  profileInputs.forEach((input) =>
-    inputValidation(profileInputs, editProfileSubmitBtn, input),
-  );
+  profileValidator.resetValidation();
 }
 function handleOpenEditModal(modal) {
   fillProfileForm();
@@ -77,6 +78,9 @@ function handleOpenEditModal(modal) {
 }
 function handleEditProfileFormSubmit(evt) {
   evt.preventDefault();
+  if (!editProfileForm.checkValidity()) {
+    return;
+  } // Check if the form is valid before proceeding
   profileTitle.textContent = profileNameInput.value;
   profileDescription.textContent = profileDescriptionInput.value;
   closeModal(editProfilePopup);
@@ -90,9 +94,6 @@ editProfileCloseBtn.addEventListener("click", () =>
 );
 
 editProfileForm.addEventListener("submit", handleEditProfileFormSubmit);
-const cardTemplate = document
-  .querySelector("#card-template")
-  .content.querySelector(".card");
 
 const cardPopup = document.querySelector("#image-popup");
 const cardPopupCloseBtn = cardPopup.querySelector(".popup__close");
@@ -101,6 +102,9 @@ const addCardBtn = document.querySelector(".profile__add-button");
 const newCardPopup = document.querySelector("#new-card-popup");
 const newCardCloseBtn = newCardPopup.querySelector(".popup__close");
 const newCardForm = document.querySelector("#new-card-form");
+
+const newCardValidator = new FormValidator(validationConfig, newCardForm);
+newCardValidator.setEventListeners();
 
 addCardBtn.addEventListener("click", () => {
   resetNewCardForm();
@@ -113,6 +117,9 @@ const cardLinkInput = newCardForm.querySelector(".popup__input_type_url");
 
 function handleCardFormSubmit(evt) {
   evt.preventDefault();
+  if (!newCardForm.checkValidity()) {
+    return;
+  } // Check if the form is valid before proceeding
 
   const card = new Card(
     cardNameInput.value,
@@ -129,32 +136,7 @@ cardPopupCloseBtn.addEventListener("click", () => {
   console.log("card popup close button clicked");
 });
 
-const cardInputs = newCardForm.querySelectorAll(".popup__input");
-const newCardSubmitBtn = newCardForm.querySelector(".popup__button");
-
 function resetNewCardForm() {
   newCardForm.reset();
-  cardInputs.forEach(hideInputError);
-  toggleButtonState(cardInputs, newCardSubmitBtn);
+  newCardValidator.resetValidation();
 }
-
-cardInputs.forEach((input) => {
-  input.addEventListener("input", () =>
-    inputValidation(cardInputs, newCardSubmitBtn, input),
-  );
-});
-
-newCardForm.addEventListener("submit", (event) => {
-  let formValid = true;
-
-  cardInputs.forEach((input) => {
-    if (!input.validity.valid) {
-      showInputError(input, input.validationMessage);
-      formValid = false;
-    }
-  });
-
-  if (!formValid) {
-    event.preventDefault();
-  }
-});
